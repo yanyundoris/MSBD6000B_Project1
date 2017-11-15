@@ -19,6 +19,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import classification_report
+from sklearn.model_selection import cross_val_predict
 
 
 
@@ -213,10 +214,13 @@ def Get_final_prediction_gridsearch(train_features, train_label, test_features, 
     print final_array
 
     target_names = ['class 0', 'class 1']
+    predict_train_label = cross_val_predict(best_clf, train_features, train_label, cv=5)
+
+    print(classification_report(train_label, predict_train_label, target_names=target_names))
 
 
     if output_file != "":
-        np.savetxt(os.path.join(os.getcwd(), output_file), final_array, fmt='%i')
+        np.savetxt(os.path.join(os.getcwd(), output_file), final_array, fmt='%1.1f')
 
 
 def output_prediction(pre_trained = True):
@@ -248,7 +252,7 @@ def output_prediction(pre_trained = True):
         ensemble_features = ensemble_features[ensemble_model]
         test_ensemble_feautures = test_ensemble_feautures[ensemble_model]
 
-        Get_final_prediction_gridsearch(ensemble_features, targets, test_ensemble_feautures, 'output_test_pretrain.out')
+        Get_final_prediction_gridsearch(ensemble_features, targets, test_ensemble_feautures, 'project1_20384933.csv')
     else:
 
         pre_processing = Select_best_features(features, targets)
@@ -289,7 +293,7 @@ if __name__ == '__main__':
     current_path = os.getcwd()
 
     output_prediction(pre_trained=True)
-    output_prediction(pre_trained=False)
+    #output_prediction(pre_trained=False)
 
     # features = pd.read_csv(os.path.join(current_path, 'traindata.csv'), header=None)
     # targets = pd.read_csv(os.path.join(current_path, 'trainlabel.csv'), header=None)
