@@ -13,9 +13,6 @@ In this project, I use a group of traditional machine learning classifiers which
 5. Given seven output predictions as input features, select the best classifier from grisearch to give last-layer prediction.
 6. Re-train the model with all the data and give prediction for test data.
 
-The workflow is shown below:
-
-
 ### II. Pre-processing and dimension reduction
 
 __Before we start - check correlation among features__
