@@ -40,6 +40,15 @@ def NormalModel(train_features, train_label, test_features):
 
 
 def Get_test_features(test_features, train_features, train_label, from_file="", output_file=""):
+    """ Get ensemble features for test data
+
+    :param test_features: the transformed test data
+    :param train_features: the transformed train data
+    :param train_label: label for train data
+    :param from_file: path loading from file (pre-train)
+    :param output_file: for re-calculate and output features (specified a path stored the output features)
+    :return: the ensembled test features
+    """
     print "Processing test features.........."
 
     if from_file != "":
@@ -94,6 +103,14 @@ def Get_test_features(test_features, train_features, train_label, from_file="", 
 
 
 def Get_ensemble_features(train_features, train_label, from_file="", output_file=''):
+    """ Get ensemble features for train data
+
+    :param train_features: the transformed train features
+    :param train_label: label for training data
+    :param from_file: path loading from file (pre-train)
+    :param output_file: for re-calculate and output features (specified a path stored the output features)
+    :return: the ensembled train features
+    """
     print "Get all ensemble model.........."
 
     if from_file != "":
@@ -149,11 +166,6 @@ def Get_ensemble_features(train_features, train_label, from_file="", output_file
             dt_tst_prediction = np.array(dt_tst_prediction)
 
             for i in range(0, len(test_index)):
-                prediction_list = [svm_tst_prediction[i] == tst_target[i], ada_tst_prediction[i] == tst_target[i],
-                                   lr_tst_prediction[i] == tst_target[i], \
-                                   lsvm_tst_prediction[i] == tst_target[i], rf_tst_prediction[i] == tst_target[i],
-                                   knn_tst_prediction[i] == tst_target[i], dt_tst_prediction[i] == tst_target[i], \
-                                   ]
 
                 prediction_value = [test_index[i], tst_target[i], svm_tst_prediction[i], ada_tst_prediction[i],
                                     lr_tst_prediction[i], \
@@ -176,6 +188,14 @@ def Get_ensemble_features(train_features, train_label, from_file="", output_file
 
 
 def Get_final_prediction_gridsearch(train_features, train_label, test_features, output_file=""):
+    """ Get final prediction using seven features by gridsearch
+
+    :param train_features: training features (seven)
+    :param train_label: label for train data
+    :param test_features: testing features (seven)
+    :param output_file: output prediction file
+    :return: N/A
+    """
 
     print "Get final prediction........."
 
@@ -216,6 +236,8 @@ def Get_final_prediction_gridsearch(train_features, train_label, test_features, 
     target_names = ['class 0', 'class 1']
     predict_train_label = cross_val_predict(best_clf, train_features, train_label, cv=5)
 
+    print "classfication summary: "
+
     print(classification_report(train_label, predict_train_label, target_names=target_names))
 
 
@@ -223,7 +245,13 @@ def Get_final_prediction_gridsearch(train_features, train_label, test_features, 
         np.savetxt(os.path.join(os.getcwd(), output_file), final_array, fmt='%1.1f')
 
 
-def output_prediction(pre_trained = True):
+def output_prediction(current_path, pre_trained = True):
+    """ Get output prediction (with pre-train ensemble features or not)
+
+    :param current_path: current path which contain train/test data and ensemble features
+    :param pre_trained: if pre-train or not
+    :return: N/A
+    """
 
     features = pd.read_csv(os.path.join(current_path, 'traindata.csv'), header=None)
     targets = pd.read_csv(os.path.join(current_path, 'trainlabel.csv'), header=None)
@@ -269,7 +297,6 @@ def output_prediction(pre_trained = True):
 
         features, test_features = Normalize_train_test_features(features, test_features)
 
-
         ensemble_features = Get_ensemble_features(features, targets)
         # ensemble_features = Get_ensemble_features(features, targets, "", "train_feature_ensemble.csv")
         ensemble_features = ensemble_features.set_index('data_id').sort_index()
@@ -284,56 +311,15 @@ def output_prediction(pre_trained = True):
         ensemble_features = ensemble_features[ensemble_model]
         test_ensemble_feautures = test_ensemble_feautures[ensemble_model]
 
-        Get_final_prediction_gridsearch(ensemble_features, targets, test_ensemble_feautures, 'output_test_process.out')
+        Get_final_prediction_gridsearch(ensemble_features, targets, test_ensemble_feautures, 'project1_20384933_2.csv')
 
 
 
 
 if __name__ == '__main__':
+
     current_path = os.getcwd()
-
-    output_prediction(pre_trained=True)
-    #output_prediction(pre_trained=False)
-
-    # features = pd.read_csv(os.path.join(current_path, 'traindata.csv'), header=None)
-    # targets = pd.read_csv(os.path.join(current_path, 'trainlabel.csv'), header=None)
-    #
-    # test_features = pd.read_csv(os.path.join(current_path, 'testdata.csv'), header=None)
-    #
-    # ensemble_model = ['rsvm', 'ada', 'lr', 'lsvm', 'rf', 'knn', 'dt']
-    #
-    # targets = Load_label_toarray(targets)
-    #
-    # # features, targets = Load_features_toarray(features), Load_label_toarray(targets)
-    # #
-    # # test_features = Load_features_toarray(test_features)
-    # #
-    # # pre_processing = Select_best_features(features, targets)
-    # #
-    # # features = pre_processing.fit_transform(features, targets)
-    # # test_features = pre_processing.transform(test_features)
-    #
-    #
-    #
-    # # features, test_features = Normalize_train_test_features(features, test_features)
-    #
-    #
-    # ensemble_features = Get_ensemble_features(features, targets, "train_feature_ensemble.csv", "")
-    # # ensemble_features = Get_ensemble_features(features, targets, "", "train_feature_ensemble.csv")
-    # ensemble_features = ensemble_features.set_index('data_id').sort_index()
-    #
-    # print ensemble_features
-    #
-    # # test_ensemble_feautures = Get_test_features(test_features, features, targets, "", 'test_feature_ensemble.csv')
-    # test_ensemble_feautures = Get_test_features(test_features, features, targets, "test_feature_ensemble.csv",
-    #                                             '')
-    #
-    # print test_ensemble_feautures
-    #
-    # ensemble_features = ensemble_features[ensemble_model]
-    # test_ensemble_feautures = test_ensemble_feautures[ensemble_model]
-    #
-    # Get_final_prediction_gridsearch(ensemble_features, targets, test_ensemble_feautures, 'output_test4.out')
+    output_prediction(current_path, pre_trained=False)
 
 
 
