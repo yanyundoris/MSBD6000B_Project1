@@ -311,15 +311,16 @@ def output_prediction(current_path, pre_trained = True):
         ensemble_features = ensemble_features[ensemble_model]
         test_ensemble_feautures = test_ensemble_feautures[ensemble_model]
 
-        Get_final_prediction_gridsearch(ensemble_features, targets, test_ensemble_feautures, 'project1_20384933_2.csv')
+        Get_final_prediction_gridsearch(ensemble_features, targets, test_ensemble_feautures, 'project1_20384933.csv')
 
 
 
 
 if __name__ == '__main__':
 
+    # Current path should store all the train/test data and ensemble features (if pre_trained)
     current_path = os.getcwd()
-    output_prediction(current_path, pre_trained=False)
+    output_prediction(current_path, pre_trained=True)
 
 
 
