@@ -15,7 +15,6 @@ In this project, I use a group of traditional machine learning classifiers which
 
 The workflow is shown below:
 
-![未命名文件 (1)](/Users/yanyunliu/Downloads/未命名文件 (1).png)
 
 ### II. Pre-processing and dimension reduction
 
