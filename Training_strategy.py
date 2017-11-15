@@ -23,22 +23,6 @@ from sklearn.model_selection import cross_val_predict
 
 
 
-def NormalModel(train_features, train_label, test_features):
-    # model_svm = SVC(kernel='rbf', C=1, degree=2)
-    model_svm = SVC(kernel='linear', C=1)
-    model_svm.fit(train_features, train_label)
-
-    svm_tst_prediction = model_svm.predict(test_features)
-
-    normal_score = cross_val_score(model_svm, train_features, train_label, cv=5)
-
-    print svm_tst_prediction
-    print normal_score
-    print np.mean(normal_score)
-
-    return svm_tst_prediction
-
-
 def Get_test_features(test_features, train_features, train_label, from_file="", output_file=""):
     """ Get ensemble features for test data
 
@@ -321,6 +305,15 @@ if __name__ == '__main__':
     # Current path should store all the train/test data and ensemble features (if pre_trained)
     current_path = os.getcwd()
     output_prediction(current_path, pre_trained=True)
+
+
+
+
+
+
+
+
+
 
 
 
